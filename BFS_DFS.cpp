@@ -1,86 +1,79 @@
 #include <iostream>
-#include <string.h>
-
+#include <stdlib.h>
 using namespace std;
 
-const int MAXN = 100; // maximum number of nodes
+int cost[10][10], i, j, k, n, qu[10], front, rear, v, visit[10], visited[10];
+int stk[10], top, visit1[10], visited1[10];
 
-int adj_matrix[MAXN][MAXN]; // adjacency matrix
-int adj_list[MAXN][MAXN]; // adjacency list
-int dist[MAXN]; // distance array for BFS
-bool visited[MAXN]; // visited array for DFS
-
-// DFS function
-void dfs(int node) {
-    visited[node] = true;
-    cout << node << " ";
-
-    for (int i = 0; i < MAXN; i++) {
-        if (adj_matrix[node][i] && !visited[i]) {
-            dfs(i);
-        }
-    }
-}
-
-// BFS function
-void bfs(int node) {
-    memset(dist, -1, sizeof(dist));
-    dist[node] = 0;
-
-    int q[MAXN];
-    int front = 0, rear = 0;
-    q[rear++] = node;
-
-    while (front != rear) {
-        int u = q[front++];
-        cout << u << " ";
-
-        for (int i = 0; i < MAXN; i++) {
-            if (adj_list[u][i] && dist[i] == -1) {
-                dist[i] = dist[u] + 1;
-                q[rear++] = i;
-            }
-        }
-    }
-}
-
-int main() {
-    int n, m; // number of nodes and edges
-    cout << "Enter the number of nodes: ";
+int main()
+{
+    int m;
+    cout << "Enter number of vertices : ";
     cin >> n;
-    cout << "Enter the number of edges: ";
+    cout << "Enter number of edges : ";
     cin >> m;
-
-    // initialize adjacency matrix and adjacency list
-    for (int i = 0; i < MAXN; i++) {
-        for (int j = 0; j < MAXN; j++) {
-            adj_matrix[i][j] = 0;
-            adj_list[i][j] = 0;
+    
+    cout << "\nEDGES :\n";
+    for (k = 1; k <= m; k++)
+    {
+        cin >> i >> j;
+        cost[i][j] = 1;
+        cost[j][i] = 1;
+    }
+    
+    //display function
+    cout << "The adjacency matrix of the graph is : " << endl;
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            cout << " " << cost[i][j];
         }
+        cout << endl;
     }
-
-    // add edges to the adjacency matrix and adjacency list
-    cout << "Enter the edges: " << endl;
-    for (int i = 0; i < m; i++) {
-        int u, v, w;
-        cout << "Enter edge " << i+1 << " (u v w): ";
-        cin >> u >> v >> w;
-        adj_matrix[u][v] = adj_matrix[v][u] = w;
-        adj_list[u][v] = adj_list[v][u] = 1;
+    
+    cout << "Enter initial vertex : ";
+    cin >> v;
+    cout << "The BFS of the Graph is\n";
+    cout << v<<endl;
+    visited[v] = 1;
+    k = 1;
+    while (k < n)
+    {
+        for (j = 1; j <= n; j++)
+            if (cost[v][j] != 0 && visited[j] != 1 && visit[j] != 1)
+            {
+                visit[j] = 1;
+                qu[rear++] = j;
+            }
+        v = qu[front++];
+        cout << v << " ";
+        k++;
+        visit[v] = 0;
+        visited[v] = 1;
     }
-
-    // perform DFS and BFS on the graph
-    int start_node;
-    cout << "Enter the starting node for DFS and BFS: ";
-    cin >> start_node;
-
-    cout << "DFS: ";
-    dfs(start_node);
-    cout << endl;
-
-    cout << "BFS: ";
-    bfs(start_node);
-    cout << endl;
+    
+    cout <<endl<<"Enter initial vertex : ";
+    cin >> v;
+    cout << "The DFS of the Graph is\n";
+    cout << v<<endl;
+    visited[v] = 1;
+    k = 1;
+    while (k < n)
+    {
+        for (j = n; j >= 1; j--)
+            if (cost[v][j] != 0 && visited1[j] != 1 && visit1[j] != 1)
+            {
+                visit1[j] = 1;
+                stk[top] = j;
+                top++;
+            }
+        v = stk[--top];
+        cout << v << " ";
+        k++;
+        visit1[v] = 0;
+        visited1[v] = 1;
+    }
 
     return 0;
 }
