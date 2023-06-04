@@ -119,4 +119,20 @@ int main() {
 
     return 0;
 }
+"""
+    Find the time and space requirements
+of your method. 
 
+ChatGPT
+The time and space requirements of the provided method can be analyzed as follows:
+
+Time Complexity:
+
+Displaying the book structure (printNode function): The time complexity of this operation is O(n), where n is the total number of nodes in the book structure. This is because we need to visit each node once to print its name.
+Adding a book: The time complexity for adding a book depends on the number of chapters, sections, and subsections entered by the user. If we denote these numbers as c, s, and ss respectively, the time complexity would be O(c * s * ss). This is because we have nested loops to iterate over chapters, sections, and subsections, resulting in a cubic time complexity.
+Space Complexity:
+
+Displaying the book structure: The space complexity of the printNode function is O(h), where h is the height of the book structure. This is because during the recursive calls, the function's call stack grows to accommodate the maximum depth of the book structure.
+Adding a book: The space complexity for adding a book is O(n), where n is the total number of nodes in the book structure. This is because we create new Node objects for each chapter, section, and subsection, resulting in a linear space complexity.
+Overall, the time complexity of the program depends on the number of nodes in the book structure, while the space complexity depends on the maximum depth or height of the book structure.
+    """"
