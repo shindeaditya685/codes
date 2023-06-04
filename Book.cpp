@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -9,36 +9,18 @@ public:
     string name;
     vector<Node*> children;
 
-    Node(string name) : name(name) {}
+    Node(string n) {
+        name = n;
+    }
 };
 
-void constructTree(Node* node) {
-    cout << "Enter the number of children for node '" << node->name << "': ";
-    int numChildren;
-    cin >> numChildren;
-
-    for (int i = 0; i < numChildren; i++) {
-        cout << "Enter the name of child " << (i + 1) << " for node '" << node->name << "': ";
-        string childName;
-        cin.ignore(); // Ignore any leftover newline character
-        getline(cin, childName);
-
-        Node* child = new Node(childName);
-        node->children.push_back(child);
-
-        constructTree(child); // Recursively construct the child's subtree
-    }
-}
-
-void printNodes(Node* node, int level = 0) {
+void printNode(Node* node, int level) {
     for (int i = 0; i < level; i++) {
-        cout << "  "; // Indentation for levels
+        cout << "  ";
     }
-    cout << node->name << endl; // Print the node name
-
-    // Recursively print the children nodes
-    for (Node* child : node->children) {
-        printNodes(child, level + 1);
+    cout << "- " << node->name << endl;
+    for (int i = 0; i < node->children.size(); i++) {
+        printNode(node->children[i], level+1);
     }
 }
 
@@ -61,7 +43,7 @@ int main() {
                     cout << "No book added yet.\n";
                 } else {
                     cout << "\nBook Structure:\n";
-                    printNodes(book);
+                    printNode(book, 0);
                 }
                 break;
             }
@@ -69,13 +51,54 @@ int main() {
                 if (book != nullptr) {
                     cout << "A book is already added. Only one book is supported.\n";
                 } else {
-                    string bookName;
+                    cin.ignore();
+
+                    string bookName, chapterName, sectionName, subsectionName;
+
                     cout << "Enter the name of the book: ";
-                    cin.ignore(); // Ignore any leftover newline character
                     getline(cin, bookName);
 
                     book = new Node(bookName);
-                    constructTree(book);
+
+                    int numChapters;
+                    cout << "How many chapters does the book have? ";
+                    cin >> numChapters;
+
+                    for (int i = 0; i < numChapters; i++) {
+                        cin.ignore();
+                        cout << "Enter the name of chapter " << i+1 << ": ";
+                        getline(cin, chapterName);
+
+                        Node* chapterNode = new Node(chapterName);
+                        book->children.push_back(chapterNode);
+
+                        int numSections;
+                        cout << "How many sections does chapter " << chapterName << " have? ";
+                        cin >> numSections;
+
+                        for (int j = 0; j < numSections; j++) {
+                            cin.ignore();
+                            cout << "Enter the name of section " << j+1 << " in chapter " << chapterName << ": ";
+                            getline(cin, sectionName);
+
+                            Node* sectionNode = new Node(sectionName);
+                            chapterNode->children.push_back(sectionNode);
+
+                            int numSubsections;
+                            cout << "How many subsections does section " << sectionName << " have? ";
+                            cin >> numSubsections;
+
+                            for (int k = 0; k < numSubsections; k++) {
+                                cin.ignore();
+                                cout << "Enter the name of subsection " << k+1 << " in section " << sectionName << ": ";
+                                getline(cin, subsectionName);
+
+                                Node* subsectionNode = new Node(subsectionName);
+                                sectionNode->children.push_back(subsectionNode);
+                            }
+                        }
+                    }
+
                     cout << "Book added successfully.\n";
                 }
                 break;
@@ -96,3 +119,4 @@ int main() {
 
     return 0;
 }
+
