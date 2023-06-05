@@ -1,108 +1,109 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-class tree {
-    int a[20][20], v, e;
+class tree{
+	int a[20][20], lowerBranch, upperBranch, weight, vertices, edges, visited[20];
 
-public:
-    void input();
-    void display();
-    void minimum();
+	public:
+		void input();
+		void display();
+		void minimum();
 };
 
-void tree::input() {
-    cout << "Enter the no. of branches: ";
-    cin >> v;
+void tree::input(){
+	cout<<"\nEnter the no. of vertices: ";
+	cin>>vertices;
 
-    for (int i = 0; i < v; i++) {
-        for (int j = 0; j < v; j++) {
-            a[i][j] = 999;
-        }
-    }
+	for(int i=0; i<vertices; i++){
+		visited[i] = 0;
+		for(int j=0; j<vertices; j++){
+			a[i][j] = 999;
+		}
+	}
 
-    cout << "\nEnter the no. of connections: ";
-    cin >> e;
+	cout<<"\nEnter the no. of edges: ";
+	cin>>edges;
 
-    for (int i = 0; i < e; i++) {
-        int l, u, w;
-        cout << "Enter the end branches of connection " << i + 1 << ": ";
-        cin >> l >> u;
-        cout << "Enter the phone company charges for this connection: ";
-        cin >> w;
-        a[l - 1][u - 1] = a[u - 1][l - 1] = w;
-    }
+	for(int i=0; i<edges; i++){
+		cout<<"\nEnter the end vertices connections: ";
+		cin>>lowerBranch>>upperBranch;
+
+		cout<<"Enter the phone company charges for this connection: ";
+		cin>>weight;
+		a[lowerBranch-1][upperBranch-1] = a[upperBranch-1][lowerBranch-1] = weight;
+	}
 }
 
-void tree::display() {
-    cout << "\nAdjacency matrix:\n";
-    for (int i = 0; i < v; i++) {
-        for (int j = 0; j < v; j++) {
-            cout << a[i][j] << "   ";
-        }
-        cout << endl;
-    }
+
+void tree::display(){
+	cout<<"\nAdjancency Matric: ";
+
+	for(int i=0; i<vertices; i++){
+		cout<<endl;
+		for(int j=0; j<vertices; j++){
+			cout<<a[i][j]<<" ";
+		}
+		cout<<endl;
+	}
 }
 
-void tree::minimum() {
-    int selected[20] = {0};
-    selected[0] = 1;
-    int p, q, total = 0, count = 0;
+void tree::minimum(){
+	int p = 0, q = 0, total = 0, min;
+	visited[0] = 1;
+	for(int count=0; count<(vertices-1); count++){
+		min = 999;
+		for(int i=0; i<vertices; i++){
+			if(visited[i] == 1){
+				for(int j=0; j<vertices; j++){
+					if(visited[j] != 1){
+						if(min > a[i][j]){
+							min = a[i][j];
+							p = i;
+							q = j;
+						}
+					}
+				}
+			}
+		}
+		visited[p] = 1;
+		visited[q] = 1;
+		total = total+min;
+		cout<<"Minimum cost connection is "<<(p+1)<<" -> "<<(q+1)<<" with charge: "<<min<<endl;
+	}
 
-    while (count < v - 1) {
-        int min = 999;
-        p = q = -1;
-
-        for (int i = 0; i < v; i++) {
-            if (selected[i] == 1) {
-                for (int j = 0; j < v; j++) {
-                    if (selected[j] != 1 && a[i][j] < min) {
-                        min = a[i][j];
-                        p = i;
-                        q = j;
-                    }
-                }
-            }
-        }
-
-        if (p != -1 && q != -1) {
-            selected[q] = 1;
-            total += min;
-            cout << "Minimum cost connection is " << p + 1 << " -> " << q + 1
-                 << "  with charge: " << min << endl;
-            count++;
-        } else {
-            break;
-        }
-    }
-
-    cout << "The minimum total cost of connections for all branches is: " << total << endl;
+	cout<<"The minimum total cost of connections of all branch is: "<<total<<endl;
 }
 
-int main() {
-    int ch;
-    tree t;
-    do {
-        cout << "==========PRIM'S ALGORITHM=================" << endl;
-        cout << "\n1. INPUT\n2. DISPLAY\n3. MINIMUM\n4. EXIT\n" << endl;
-         cin >> ch;
+int main(){
+	int choice;
+	tree t;
 
-        switch (ch) {
-            case 1:
-                cout << "*******INPUT YOUR VALUES*******" << endl;
-                t.input();
-                break;
+	do{
+		cout<<"==========PRIM'S ALGORITHM================="<<endl;
+		cout<<"\n1.INPUT\n \n2.DISPLAY\n \n3.MINIMUM\n"<<endl;
+		
+		cout<<"Enter your choice :";
+		cin>>choice;
+		cout<<endl;
 
-            case 2:
-                cout << "*******DISPLAY THE CONTENTS********" << endl;
-                t.display();
-                break;
+		switch(choice){
+			case 1:
+				cout<<"*********INPUT YOUR VALUES*********"<<endl;
+				t.input();
+				cout<<endl;
+				break;
+			case 2:
+				cout<<"*********DISPLAY THE CONTENTS*********"<<endl;
+				t.display();
+				cout<<endl;
+				break;
+			case 3:
+				cout<<"*********MINIMUM*********"<<endl;
+				t.minimum();
+				cout<<endl;
+				break;
+		}
+	}while(choice != 4);
 
-            case 3:
-                cout << "*********MINIMUM************" << endl;
-                t.minimum();
-                break;
-        }
-    } while (ch != 4);
-
-    return 0;
+	return 0;
 }
